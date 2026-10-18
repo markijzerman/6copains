@@ -1,0 +1,62 @@
+name: Build and release 6Copains
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Install toolchains
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-dev \
+            clang lua5.4 zip unzip
+          arm-none-eabi-g++ --version | head -1
+          clang++ --version | head -1
+
+      - name: Tag matches VERSION
+        if: github.ref_type == 'tag'
+        run: test "v$(cat VERSION)" = "$GITHUB_REF_NAME"
+
+      - name: Native tests
+        run: make test HOST_CXX=clang++
+
+      - name: Lua tests
+        run: make lua-test LUA=lua5.4
+
+      - name: Build and inspect the ARM object
+        run: |
+          make hardware inspect ARM_PREFIX=arm-none-eabi- ARM_CXX=arm-none-eabi-g++
+          arm-none-eabi-size -A plugins/6copains.o
+
+      - name: Package
+        run: make dist ARM_PREFIX=arm-none-eabi- ARM_CXX=arm-none-eabi-g++
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: 6copains
+          path: dist/*.zip
+          if-no-files-found: error
+
+      - name: Create GitHub release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/*.zip
+          generate_release_notes: true

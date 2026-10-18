@@ -1,0 +1,5 @@
+build/
+plugins/
+renders/
+dist/
+.DS_Store
