@@ -50,8 +50,6 @@ enum {
     kNumParams,
 };
 
-constexpr uint32_t kCopainsGuid = NT_MULTICHAR('M', 'j', 'M', 'a');
-
 // Envelope Time parameter index 0..1000 -> 0.0026..8 s (exponential).
 float copains_timeFromIndex(int index);
 

@@ -499,7 +499,8 @@ bool profileDraw(_NT_algorithm* self) {
 #endif
 
 const _NT_factory kFactory = {
-    .guid = kCopainsGuid,
+    // MjMa since the monami.e builds; kept so existing presets still load.
+    .guid = NT_MULTICHAR('M', 'j', 'M', 'a'),
     .name = "6Copains",
     .description = "Just Friends-style 6-voice synth, after nb_monamie",
     .numSpecifications = 0,
