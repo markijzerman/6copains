@@ -25,7 +25,7 @@ make test       # native tests with ASan/UBSan (needs the local tests/)
 make lua-test   # 6Copains Banks tests (Lua 5.4)
 make render     # WAV renders -> renders/ (needs the local tests/ and tools/)
 make inspect    # ELF checks, pluginEntry export, undefined symbols
-make dist       # release zip -> dist/6copains-<VERSION>.zip
+make dist       # release zip -> dist/6copains-plugin.zip
 make verify     # test + lua-test + hardware + inspect
 ```
 
@@ -33,15 +33,15 @@ make verify     # test + lua-test + hardware + inspect
 
 1. Update `VERSION` and commit.
 2. Tag `v<VERSION>` and push the tag.
-3. The workflow builds with Ubuntu's `gcc-arm-none-eabi`, runs both test
-   suites and `inspect`, and attaches `6copains-<VERSION>.zip` to a GitHub
-   release.
+3. The workflow builds with Ubuntu's `gcc-arm-none-eabi`, runs the Lua tests
+   and `inspect`, and attaches `6copains-plugin.zip` to a GitHub release.
 
-The zip holds `programs/plug-ins/6copains.o` and
-`programs/lua/6copains_banks.lua`. nt_helper (and the NT Plugin Gallery it
-installs from) routes `.o` files to `/programs/plug-ins` and `.lua` files to
-`/programs/lua`. Keep exactly one plug-in asset per release: the gallery
-installs the first non-source `.zip`/`.o`/`.lua` it finds.
+The zip holds only `programs/plug-ins/6copains.o`. The NT Plugin Gallery reads
+a C++ plug-in's GUID from the `.o` in the latest release, never from the
+source. It skips a zip that mixes plug-in types, so 1.0.0's zip (`.o` plus
+`.lua`) was not recognised. Keep exactly one plug-in asset per release and
+keep its name: the gallery matches later releases to the entry by asset name.
+The Lua script is installed by hand from `lua/`.
 
 The Makefile uses `arm-none-eabi-c++` from PATH. If it's not there, it falls
 back to the newest Arm GNU Toolchain in `/Applications` (installed by

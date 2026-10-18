@@ -5,7 +5,7 @@
 #   make lua-test   tests for the 6Copains Banks Lua script (Lua 5.4)
 #   make render     native WAV renders of nb_monamie's patches -> renders/
 #   make inspect    check the ARM object and list its undefined symbols
-#   make dist       release zip -> dist/6copains-<version>.zip
+#   make dist       release zip -> dist/6copains-plugin.zip
 #   make verify     test + lua-test + hardware + inspect
 #   make profile    temporary on-device profiler build (same GUID)
 
@@ -15,7 +15,6 @@ API_DIR  ?= distingNT_API
 SRC      := src/copains.cpp
 HEADERS  := src/copains_engine.h src/copains_plugin.h
 INCLUDES := -I$(API_DIR)/include -Isrc
-LUA_SCRIPT := lua/6copains_banks.lua
 
 # ARM toolchain: use arm-none-eabi-c++ from PATH, else the newest
 # Arm GNU Toolchain installed under /Applications (gcc-arm-embedded cask).
@@ -87,13 +86,17 @@ inspect: plugins/$(PLUGIN).o
 	@$(ARM_NM) -u $<
 
 # Release zip with the SD card layout nt_helper and the NT gallery install from.
-dist: plugins/$(PLUGIN).o $(LUA_SCRIPT)
-	@rm -rf build/dist && mkdir -p build/dist/programs/plug-ins build/dist/programs/lua dist
+# Only the .o: the gallery skips a zip that mixes plug-in types (.o and .lua),
+# and reads the GUID from the .o. The fixed name lets later releases match the
+# same gallery entry.
+DIST_ZIP := dist/$(PLUGIN)-plugin.zip
+
+dist: plugins/$(PLUGIN).o
+	@rm -rf build/dist && mkdir -p build/dist/programs/plug-ins dist
 	cp plugins/$(PLUGIN).o build/dist/programs/plug-ins/
-	cp $(LUA_SCRIPT) build/dist/programs/lua/
-	@rm -f dist/$(PLUGIN)-$(VERSION).zip
-	cd build/dist && zip -X -r ../../dist/$(PLUGIN)-$(VERSION).zip programs
-	@unzip -l dist/$(PLUGIN)-$(VERSION).zip
+	@rm -f $(DIST_ZIP)
+	cd build/dist && zip -X -r ../../$(DIST_ZIP) programs
+	@unzip -l $(DIST_ZIP)
 
 verify: test lua-test hardware inspect
 

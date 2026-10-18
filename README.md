@@ -24,14 +24,15 @@ play it.
 
 **From the NT Plugin Gallery:** install *6Copains* with
 [nt_helper](https://github.com/No-Such-Device/nt_helper)'s gallery browser.
-It puts both files in place.
 
-**By hand:** download `6copains-<version>.zip` from the
+**By hand:** download `6copains-plugin.zip` from the
 [Releases](../../releases) page and copy its `programs` folder to the root of
-the disting NT's MicroSD card:
+the disting NT's MicroSD card. It holds `programs/plug-ins/6copains.o`, the
+6Copains algorithm (category: instrument).
 
-- `programs/plug-ins/6copains.o`: the 6Copains algorithm (category: instrument)
-- `programs/lua/6copains_banks.lua`: the 6Copains Banks script (for the Lua Script algorithm)
+**6Copains Banks (optional):** the note player script isn't in the release.
+Download [`lua/6copains_banks.lua`](lua/6copains_banks.lua) from this
+repository and copy it to `programs/lua/` on the card.
 
 Then reboot the NT. It reads plug-ins and Lua scripts only at startup.
 
