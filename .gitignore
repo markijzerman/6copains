@@ -3,3 +3,7 @@ plugins/
 renders/
 dist/
 .DS_Store
+
+# Native tests and render tool stay local (not in the public repository)
+tests/
+tools/

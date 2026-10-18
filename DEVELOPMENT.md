@@ -7,23 +7,23 @@
 | `src/copains_engine.h` | Synthesis engine and voice allocation. No disting NT API calls. |
 | `src/copains.cpp` | Plug-in glue: parameters, pages, routing, MIDI, CV/gate scanning. |
 | `src/copains_plugin.h` | Parameter indices (stored in presets: append only) and test hooks. |
-| `tests/` | Native behaviour tests, a fake NT host, and API stubs. |
-| `tools/render_demo.cpp` | Renders nb_monamie's patches to WAV via the native build. |
+| `tests/` | Native behaviour tests, a fake NT host, and API stubs. Local only: not in the public repository. |
+| `tools/render_demo.cpp` | Renders nb_monamie's patches to WAV via the native build (needs `tests/`). Local only. |
 | `lua/6copains_banks.lua` | The 6Copains Banks script; `lua/tests/` holds its Lua 5.4 tests. |
 | `.github/workflows/release.yml` | Builds, tests and publishes a release for `v*` tags. |
 
 The API is the `distingNT_API` submodule, pinned to tag v1.19.0 (API v14).
 Clone with `git clone --recursive`, or run `git submodule update --init`.
-The plug-in ID (GUID) is `MjMa`. It was released as 6Copains before 1.0.0;
+The plug-in ID (GUID) is `MjMa`. It was released as monami.e before 1.0.0;
 keep the ID so existing presets load.
 
 ## Commands
 
 ```bash
 make            # ARM object -> plugins/6copains.o
-make test       # native tests with ASan/UBSan
+make test       # native tests with ASan/UBSan (needs the local tests/)
 make lua-test   # 6Copains Banks tests (Lua 5.4)
-make render     # WAV renders -> renders/
+make render     # WAV renders -> renders/ (needs the local tests/ and tools/)
 make inspect    # ELF checks, pluginEntry export, undefined symbols
 make dist       # release zip -> dist/6copains-<VERSION>.zip
 make verify     # test + lua-test + hardware + inspect

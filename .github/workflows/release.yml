@@ -25,16 +25,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-dev \
-            clang lua5.4 zip unzip
+            lua5.4 zip unzip
           arm-none-eabi-g++ --version | head -1
-          clang++ --version | head -1
 
       - name: Tag matches VERSION
         if: github.ref_type == 'tag'
         run: test "v$(cat VERSION)" = "$GITHUB_REF_NAME"
-
-      - name: Native tests
-        run: make test HOST_CXX=clang++
 
       - name: Lua tests
         run: make lua-test LUA=lua5.4
